@@ -86,7 +86,7 @@ public class Fragment_HienThi extends Fragment{
             tv_tenhienthi.setText(dulieu[1]);
 
 
-            if(dulieu[1].toString().toLowerCase().contains("thể loại")){
+            if(dulieu[1].toLowerCase().contains("thể loại")){
                 refesh_theloai();
 
                 if (theloaiArrayList.size()==0){
@@ -228,6 +228,26 @@ public class Fragment_HienThi extends Fragment{
                     refesh_lv_theloai();
                 }
             }
+            else if (dulieu[1].toLowerCase().contains("tác giả")){
+                refesh_tacgia();
+                if (tacgiaArrayList.size()==0){
+                    Dialog dialog = new Dialog(getActivity());
+                    dialog.setContentView(R.layout.dialog_list_null);
+
+                    Button btn= dialog.findViewById(R.id.btn_ok_dialog_list_null);
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.show();
+                }
+                else {
+                    refesh_lv_tacgia();
+                }
+            }
         }
 
 
@@ -271,18 +291,18 @@ public class Fragment_HienThi extends Fragment{
 
                                 }
                             }
-                        }
-                    });
-                    btn_update_huy.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.cancel();
-                        }
-                    });
+                                    }
+                                });
+                                btn_update_huy.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.cancel();
+                                    }
+                                });
 
-                    dialog.show();
+                                dialog.show();
 
-                }
+                            }
                 else if(dulieu[1].toString().toLowerCase().contains("hoá đơn")){
                     Bundle bundle1= new Bundle();
                     bundle1.putString("guidulieu","tao-Hoá Đơn");
@@ -299,7 +319,7 @@ public class Fragment_HienThi extends Fragment{
                 }
                 else if(dulieu[1].toString().toLowerCase().contains("tác giả")){
                     Bundle bundle1= new Bundle();
-                    bundle1.putString("guidulieu","tao-Tác Giả-khong co gi");
+                    bundle1.putString("guidulieu","tao-Tác Giả-ok");
                     Fragment_TacGia fragment=new Fragment_TacGia();
                     fragment.setArguments(bundle1);
                     getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment).addToBackStack(Tag).commit();

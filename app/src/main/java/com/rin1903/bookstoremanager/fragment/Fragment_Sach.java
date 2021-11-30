@@ -45,6 +45,7 @@ import butterknife.Unbinder;
 
 public class Fragment_Sach extends Fragment {
     Unbinder unbinder;
+    @BindView(R.id.spinner_trangthai_sach) Spinner spinner_trangthai;
     @BindView(R.id.btn_huy_sach)
     Button btn_huy;
     @BindView(R.id.btn_update_sach) Button btn_update;
@@ -69,6 +70,7 @@ public class Fragment_Sach extends Fragment {
 
         unbinder= ButterKnife.bind(this,view);
 
+        load_trangthaisach();
         reload_loaisach();
         reload_tacgia();
 
@@ -76,7 +78,7 @@ public class Fragment_Sach extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle1= new Bundle();
-                bundle1.putString("guidulieu","tao-Tác Giả-khong co gi");
+                bundle1.putString("guidulieu","tao-Tác Giả-sach");
                 Fragment_TacGia fragment=new Fragment_TacGia();
                 fragment.setArguments(bundle1);
                 getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment).addToBackStack(Tag).commit();
@@ -193,7 +195,14 @@ public class Fragment_Sach extends Fragment {
         ArrayAdapter adapter= new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
         spinner_tentacgia.setAdapter(adapter);
     }
-
+    void load_trangthaisach(){
+        ArrayList<String> list= new ArrayList<>();
+        list.add("Ngừng kinh doanh");
+        list.add("Hết hàng");
+        list.add("Còn hàng");
+        ArrayAdapter adapter= new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item,list);
+        spinner_trangthai.setAdapter(adapter);
+    }
     //themhinhanh
     void imageChooser() {
 

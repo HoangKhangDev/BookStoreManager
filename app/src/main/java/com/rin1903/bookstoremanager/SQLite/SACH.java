@@ -8,33 +8,11 @@ public class SACH {
                 "   MATACGIA             varchar(100)         not null," +
                 "   TENSACH              varchar(100)         null," +
                 "   SOQUYEN              int                  null," +
+                "   TRANGTHAI            varchar(50)          null,"+
                 "   GIABAN               int          null," +
                 " HINH_SACH            BLOB         null,"+
                 "   constraint PK_SACH primary key (MASACH)" +
                 ")";
-    }
-
-    public SACH(int MASACH) {
-        this.MASACH = MASACH;
-    }
-
-    public SACH() {
-    }
-
-    public SACH(int MASACH, String MALOAI, String MATACGIA) {
-        this.MASACH = MASACH;
-        this.MALOAI = MALOAI;
-        this.MATACGIA = MATACGIA;
-    }
-
-    public SACH(int MASACH, String MALOAI, String MATACGIA, String TENSACH, int SOQUYEN, int GIABAN, byte[] HINH_SACH) {
-        this.MASACH = MASACH;
-        this.MALOAI = MALOAI;
-        this.MATACGIA = MATACGIA;
-        this.TENSACH = TENSACH;
-        this.SOQUYEN = SOQUYEN;
-        this.GIABAN = GIABAN;
-        this.HINH_SACH = HINH_SACH;
     }
 
     public int getMASACH() {
@@ -77,6 +55,14 @@ public class SACH {
         this.SOQUYEN = SOQUYEN;
     }
 
+    public String getTRANGTHAI() {
+        return TRANGTHAI;
+    }
+
+    public void setTRANGTHAI(String TRANGTHAI) {
+        this.TRANGTHAI = TRANGTHAI;
+    }
+
     public int getGIABAN() {
         return GIABAN;
     }
@@ -93,12 +79,34 @@ public class SACH {
         this.HINH_SACH = HINH_SACH;
     }
 
+    public SACH() {
+    }
+
+    public SACH(int MASACH, String MALOAI, String MATACGIA) {
+        this.MASACH = MASACH;
+        this.MALOAI = MALOAI;
+        this.MATACGIA = MATACGIA;
+    }
+
+    public SACH(int MASACH, String MALOAI, String MATACGIA, String TENSACH, int SOQUYEN, String TRANGTHAI, int GIABAN, byte[] HINH_SACH) {
+        this.MASACH = MASACH;
+        this.MALOAI = MALOAI;
+        this.MATACGIA = MATACGIA;
+        this.TENSACH = TENSACH;
+        this.SOQUYEN = SOQUYEN;
+        this.TRANGTHAI = TRANGTHAI;
+        this.GIABAN = GIABAN;
+        this.HINH_SACH = HINH_SACH;
+    }
+
     public String getTENBANG(){
         return "SACH";
     }
     private int MASACH;
     private String MALOAI,MATACGIA,TENSACH;
-    private int SOQUYEN,GIABAN;
+    private int SOQUYEN;
+    private String TRANGTHAI;
+    private int GIABAN;
     private byte[] HINH_SACH;
 
 

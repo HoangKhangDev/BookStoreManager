@@ -11,8 +11,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +47,7 @@ import butterknife.Unbinder;
 public class Fragment_TacGia extends Fragment {
     Unbinder unbinder;
     private String Matacgia;
+    private String check_change_image="";
     @BindView(R.id.img_hinh_tacgia_fragment)  ImageView imghinhtacgia;
     @BindView(R.id.edt_tentacgia_tacgia)  EditText edt_tentacgia;
     @BindView(R.id.edt_sdt_tacgia) EditText edt_sdttacgia;
@@ -54,11 +58,14 @@ public class Fragment_TacGia extends Fragment {
     @BindView(R.id.img_calendar_tacgia) ImageView img_calendar;
     @BindView(R.id.btn_them_theloai_tacgia) Button btn_them;
     @BindView(R.id.btn_huy_tacgia) Button btn_huy;
+    private   Character first;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_tacgia,container,false);
         unbinder= ButterKnife.bind(this,view);
+        check_change_image="false";
+
 
         List<String> gioitinh = new ArrayList<>();
         gioitinh.add("Nam");
@@ -110,23 +117,70 @@ public class Fragment_TacGia extends Fragment {
                 datePickerDialog.show();
             }
         });
+        edt_sdttacgia.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().isEmpty()){
+                    first = s.toString().charAt(0);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().isEmpty()){
+                    first = s.toString().charAt(0);
+                }
+            }
+        });
 
         btn_them.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!edt_tentacgia.getText().toString().isEmpty()&
                 !edt_diachi.getText().toString().isEmpty()&
-                edt_sdttacgia.getText().toString().isEmpty()&
-
+                !edt_sdttacgia.getText().toString().isEmpty()&
                 tv_ngaysinh.getText().toString()!="dd/mm/yyyy"){
-                    BitmapDrawable bitmapDrawable = (BitmapDrawable) imghinhtacgia.getDrawable();
-                    Bitmap bitmap= bitmapDrawable.getBitmap();
-                    ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
-                    byte[] hinhanh= byteArrayOutputStream.toByteArray();
-                    database.INSERT_TACGIA(Matacgia,edt_tentacgia.getText().toString(),spinner_gioitinh.getSelectedItem().toString(),
-                            tv_ngaysinh.getText().toString(),edt_diachi.getText().toString(), hinhanh);
-                    Toast.makeText(getActivity(), "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+                    if(check_change_image.contains("false"))
+                    {
+                        Toast.makeText(getActivity(), "Bạn chưa đổi ảnh đại diện", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        if(edt_sdttacgia.getText().length()<10){
+                            Toast.makeText(getActivity(), "Bạn chưa nhập đủ 10 số!!!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            if(first.toString().contains("0")){
+                                BitmapDrawable bitmapDrawable = (BitmapDrawable) imghinhtacgia.getDrawable();
+                                Bitmap bitmap= bitmapDrawable.getBitmap();
+                                ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+                                byte[] hinhanh= byteArrayOutputStream.toByteArray();
+                                database.INSERT_TACGIA(Matacgia,edt_tentacgia.getText().toString(),spinner_gioitinh.getSelectedItem().toString(),
+                                        tv_ngaysinh.getText().toString(),edt_diachi.getText().toString(), hinhanh);
+                                Toast.makeText(getActivity(), "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+                                if (dulieu[2].contains("sach")){
+                                    if(getFragmentManager()!=null){
+                                        getFragmentManager().popBackStack();
+                                    }
+                                }
+                                else {
+                                    Bundle bundle1= new Bundle();
+                                    bundle1.putString("guidulieu","guidulieu-tác giả");
+                                    Fragment_HienThi fragment_hienThi= new Fragment_HienThi();
+                                    fragment_hienThi.setArguments(bundle1);
+                                    getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment_hienThi).commit();
+                                }
+                            }
+                            else {
+                                Toast.makeText(getActivity(), "Số điện thoại bắt đầu bằng 0", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
                 }
                 else {
                     Toast.makeText(getActivity(), "Bạn chưa điền đủ thông tin", Toast.LENGTH_LONG).show();
@@ -174,6 +228,7 @@ public class Fragment_TacGia extends Fragment {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
+                    check_change_image="true";
                     imghinhtacgia.setImageURI(selectedImageUri);
                 }
             }

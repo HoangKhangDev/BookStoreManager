@@ -30,12 +30,12 @@ public class Adapter_tacgia extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return tacgiaArrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return tacgiaArrayList.get(position);
     }
 
     @Override
