@@ -50,8 +50,7 @@ import butterknife.Unbinder;
 
 public class Fragment_HienThi extends Fragment{
     Unbinder unbinder;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
+
     @BindView(R.id.listview_fragment_hienthi) ListView lv_hienthi;
     @BindView(R.id.tv_tenhienthi_fragment_hienthi) TextView tv_tenhienthi;
     @BindView(R.id.button_float_add_fragment_hienthi) FloatingActionButton btn_add;
@@ -338,7 +337,6 @@ public class Fragment_HienThi extends Fragment{
         lv_hienthi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                KHACHHANG khachhang= (KHACHHANG) parent.getAdapter().getItem(position);
             }
         });
 

@@ -156,7 +156,8 @@ public class Fragment_Sach extends Fragment {
                         Masach+=cursor.getInt(0);
                     }
                 }
-                taomabarcode();
+
+                taomabarcode(String.valueOf(Masach));
             }
         }
         edt_soquyen.addTextChangedListener(new TextWatcher() {
@@ -194,18 +195,18 @@ public class Fragment_Sach extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!edt_tensach.getText().toString().isEmpty()&!edt_giaban.getText().toString().isEmpty()
-                &!edt_soquyen.getText().toString().isEmpty()&spinner_tentacgia.getSelectedItem().toString().contains("Không có tác giả,vui lòng thêm")
-                &spinner_tenloaisach.getSelectedItem().toString().contains("Không có thể loại,vui lòng thêm")){
+                &!edt_soquyen.getText().toString().isEmpty()&!spinner_tentacgia.getSelectedItem().toString().contains("Không có tác giả,vui lòng thêm")
+                &!spinner_tenloaisach.getSelectedItem().toString().contains("Không có thể loại,vui lòng thêm")){
                     if(check_image_change.contains("true")){
 
-                        if(sachArrayList.size()!=0){
-                            boolean ketqua=true;
+                        if(sachArrayList.size()>0){
+                            String ketqua="1";
                             for(int i=0;i<sachArrayList.size();i++){
                                 if(sachArrayList.get(i).getTENSACH().contains(edt_tensach.getText().toString())){
-                                    ketqua=false;
+                                    ketqua="0";
                                 }
                             }
-                            if(ketqua==false){
+                            if(ketqua.contains("0")){
                                 Dialog dialog= new Dialog(getActivity());
                                 dialog.setContentView(R.layout.dialog_xacnhan);
 
@@ -232,6 +233,9 @@ public class Fragment_Sach extends Fragment {
                                 tao_sach();
                             }
                         }
+                        else {
+                            tao_sach();
+                        }
 
                     }
                     else {
@@ -252,10 +256,10 @@ public class Fragment_Sach extends Fragment {
         });
         return view;
     }
-    private void taomabarcode(){
+    private void taomabarcode(String masach){
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode("code123", BarcodeFormat.CODE_128, 300, 100);
+            BitMatrix bitMatrix = multiFormatWriter.encode(masach, BarcodeFormat.CODE_128, 300, 100);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             img_barcode.setImageBitmap(barcodeEncoder.createBitmap(bitMatrix));
         } catch (WriterException e) {
@@ -355,6 +359,7 @@ public class Fragment_Sach extends Fragment {
         Fragment_HienThi fragment_hienThi= new Fragment_HienThi();
         Bundle bundle1= new Bundle();
         bundle1.putString("guidulieu","guidulieu-Sách");
+        fragment_hienThi.setArguments(bundle1);
         getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment_hienThi).commit();
     }
 
