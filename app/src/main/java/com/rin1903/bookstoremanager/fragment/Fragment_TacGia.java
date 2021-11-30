@@ -117,7 +117,7 @@ public class Fragment_TacGia extends Fragment {
                 if(!edt_tentacgia.getText().toString().isEmpty()&
                 !edt_diachi.getText().toString().isEmpty()&
                 edt_sdttacgia.getText().toString().isEmpty()&
-                !imghinhtacgia.getDrawable(R.drawable   )&
+
                 tv_ngaysinh.getText().toString()!="dd/mm/yyyy"){
                     BitmapDrawable bitmapDrawable = (BitmapDrawable) imghinhtacgia.getDrawable();
                     Bitmap bitmap= bitmapDrawable.getBitmap();
