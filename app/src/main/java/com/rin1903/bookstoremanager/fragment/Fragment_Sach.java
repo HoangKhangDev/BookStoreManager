@@ -5,8 +5,10 @@ import static android.app.Activity.RESULT_OK;
 import static com.rin1903.bookstoremanager.MainActivity.SELECT_PICTURE;
 import static com.rin1903.bookstoremanager.MainActivity.Tag;
 import static com.rin1903.bookstoremanager.MainActivity.database;
+import static com.rin1903.bookstoremanager.MainActivity.dulieu;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_tacgia;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_theloai;
+import static com.rin1903.bookstoremanager.MainActivity.sachArrayList;
 import static com.rin1903.bookstoremanager.MainActivity.tacgiaArrayList;
 import static com.rin1903.bookstoremanager.MainActivity.theloaiArrayList;
 
@@ -14,8 +16,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,6 +44,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.rin1903.bookstoremanager.MainActivity;
 import com.rin1903.bookstoremanager.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +54,8 @@ import butterknife.Unbinder;
 
 public class Fragment_Sach extends Fragment {
     Unbinder unbinder;
+    private String check_image_change="";
+    private int Masach;
     @BindView(R.id.spinner_trangthai_sach) Spinner spinner_trangthai;
     @BindView(R.id.btn_huy_sach)
     Button btn_huy;
@@ -69,6 +80,8 @@ public class Fragment_Sach extends Fragment {
         Tag= Fragment_Sach.class.getName();
 
         unbinder= ButterKnife.bind(this,view);
+
+        check_image_change="false";
 
         load_trangthaisach();
         reload_loaisach();
@@ -129,6 +142,46 @@ public class Fragment_Sach extends Fragment {
             }
         });
 
+        Bundle bundle = getArguments();
+        if(bundle!=null) {
+            dulieu = bundle.getString("guidulieu").split("-");
+            if(dulieu[0].toLowerCase().contains("tao")){
+                Cursor cursor=database.Getdata("select MASACH from SACH order by MASACH desc limit 1");
+
+                if(cursor.getCount()==0){
+                    Masach= 1000;
+                }
+                else{
+                    while (cursor.moveToNext()){
+                        Masach+=cursor.getInt(0);
+                    }
+                }
+                taomabarcode();
+            }
+        }
+        edt_soquyen.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().isEmpty()){
+                    if(Integer.parseInt(s.toString())>0){
+                        spinner_trangthai.setSelection(2);
+                    }
+                    else {
+                        spinner_trangthai.setSelection(0);
+                    }
+                }
+            }
+        });
 
 
         img_sach.setOnClickListener(new View.OnClickListener() {
@@ -141,10 +194,52 @@ public class Fragment_Sach extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!edt_tensach.getText().toString().isEmpty()&!edt_giaban.getText().toString().isEmpty()
-                &!edt_soquyen.getText().toString().isEmpty()&spinner_tentacgia.getSelectedItem().toString()=="Không có tác giả,vui lòng thêm"
-                &spinner_tenloaisach.getSelectedItem().toString()=="Không có thể loại,vui lòng thêm"
-                        &img_sach.getDrawable()!=getResources().getDrawable(R.drawable.no_pictures)){
-                    Toast.makeText(getActivity(), "da thay doi", Toast.LENGTH_SHORT).show();
+                &!edt_soquyen.getText().toString().isEmpty()&spinner_tentacgia.getSelectedItem().toString().contains("Không có tác giả,vui lòng thêm")
+                &spinner_tenloaisach.getSelectedItem().toString().contains("Không có thể loại,vui lòng thêm")){
+                    if(check_image_change.contains("true")){
+
+                        if(sachArrayList.size()!=0){
+                            boolean ketqua=true;
+                            for(int i=0;i<sachArrayList.size();i++){
+                                if(sachArrayList.get(i).getTENSACH().contains(edt_tensach.getText().toString())){
+                                    ketqua=false;
+                                }
+                            }
+                            if(ketqua==false){
+                                Dialog dialog= new Dialog(getActivity());
+                                dialog.setContentView(R.layout.dialog_xacnhan);
+
+                                Button btn_xacnhan= dialog.findViewById(R.id.btn_xacnhan_dialog_xacnhan);
+                                Button btn_huy= dialog.findViewById(R.id.btn_huy_dialog_xacnhan);
+                                TextView tv_noidung = dialog.findViewById(R.id.tv_noidung_dialog_xacnhan);
+
+                                tv_noidung.setText("Tên sách này đã tồn tại bạn vẫn muốn tạo chứ???");
+                                btn_xacnhan.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        tao_sach();
+                                    }
+                                });
+                                btn_huy.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                dialog.show();
+                            }
+                            else {
+                                tao_sach();
+                            }
+                        }
+
+                    }
+                    else {
+                        Toast.makeText(getActivity(), "Vui lòng đổi ảnh", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(getActivity(), "Bạn chưa điền đủ thông tin", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -160,7 +255,7 @@ public class Fragment_Sach extends Fragment {
     private void taomabarcode(){
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode("code123", BarcodeFormat.CODE_128, img_barcode.getWidth(), img_barcode.getHeight());
+            BitMatrix bitMatrix = multiFormatWriter.encode("code123", BarcodeFormat.CODE_128, 300, 100);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             img_barcode.setImageBitmap(barcodeEncoder.createBitmap(bitMatrix));
         } catch (WriterException e) {
@@ -230,10 +325,37 @@ public class Fragment_Sach extends Fragment {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri) {
                     // update the preview image in the layout
+                    check_image_change="true";
                     img_sach.setImageURI(selectedImageUri);
                 }
             }
         }
+    }
+    private void tao_sach(){
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) img_sach.getDrawable();
+        Bitmap bitmap= bitmapDrawable.getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] hinhanh= byteArrayOutputStream.toByteArray();
+        refesh_theloai();
+        reload_tacgia();
+        String maloai = null,matacgia=null;
+        Cursor cursor_theloai=database.Getdata("select MALOAI from THELOAI where TENLOAI='"+spinner_tenloaisach.getSelectedItem().toString()+"'");
+        Cursor cursor_tacgia= database.Getdata("Select MATACGIA from TACGIA where TENTACGIA='"+spinner_tentacgia.getSelectedItem().toString()+"'");
+        while (cursor_tacgia.moveToNext()){
+            matacgia=cursor_tacgia.getString(0);
+        }
+        while (cursor_theloai.moveToNext())
+        {
+            maloai=cursor_theloai.getString(0);
+        }
+        database.INSERT_SACH(Masach,maloai,matacgia,edt_tensach.getText().toString(),Integer.parseInt(edt_soquyen.getText().toString())
+                ,spinner_trangthai.getSelectedItem().toString(),Integer.parseInt(edt_giaban.getText().toString()),hinhanh);
+        Toast.makeText(getActivity(), "Thêm Sách Thành Công", Toast.LENGTH_SHORT).show();
+        Fragment_HienThi fragment_hienThi= new Fragment_HienThi();
+        Bundle bundle1= new Bundle();
+        bundle1.putString("guidulieu","guidulieu-Sách");
+        getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment_hienThi).commit();
     }
 
 

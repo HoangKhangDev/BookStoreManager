@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+
         trang= new ArrayList<>();
 
         database = new Database(this,"quanlycuahangsach.sqlite",null,1);
@@ -114,8 +115,8 @@ public class MainActivity extends AppCompatActivity{
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-               switch (item.getTitle().toString()){
-                   case "home":
+               switch (item.getItemId()){
+                   case R.id.home:
                    {
                        FragmentManager fragmentManager = getFragmentManager();
                        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
@@ -124,9 +125,13 @@ public class MainActivity extends AppCompatActivity{
                        fragmentTransaction.commit();
                        break;
                    }
-                   case "search":
+                   case R.id.taohoadon:
                    {
                        scancode();
+                       break;
+                   }
+                   case R.id.report:
+                   {
                    }
                }
                 return true;
