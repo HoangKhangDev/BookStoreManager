@@ -42,7 +42,6 @@ import com.rin1903.bookstoremanager.Adapter.Adapter_tacgia;
 import com.rin1903.bookstoremanager.Adapter.Adapter_theloai;
 import com.rin1903.bookstoremanager.MainActivity;
 import com.rin1903.bookstoremanager.R;
-import com.rin1903.bookstoremanager.SQLite.KHACHHANG;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

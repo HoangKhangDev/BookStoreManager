@@ -1,7 +1,6 @@
 package com.rin1903.bookstoremanager.fragment;
 
 import static android.app.Activity.RESULT_OK;
-
 import static com.rin1903.bookstoremanager.MainActivity.SELECT_PICTURE;
 import static com.rin1903.bookstoremanager.MainActivity.Tag;
 import static com.rin1903.bookstoremanager.MainActivity.database;
@@ -13,7 +12,6 @@ import static com.rin1903.bookstoremanager.MainActivity.tacgiaArrayList;
 import static com.rin1903.bookstoremanager.MainActivity.theloaiArrayList;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -41,12 +40,15 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.rin1903.bookstoremanager.MainActivity;
 import com.rin1903.bookstoremanager.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +56,8 @@ import butterknife.Unbinder;
 
 public class Fragment_Sach extends Fragment {
     Unbinder unbinder;
+    private int REQUEST_CODE=19;
+    private OutputStream outputStream;
     private String check_image_change="";
     private int Masach;
     @BindView(R.id.spinner_trangthai_sach) Spinner spinner_trangthai;
@@ -139,6 +143,25 @@ public class Fragment_Sach extends Fragment {
                 });
                 dialog.show();
 
+            }
+        });
+
+        img_barcode_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File root = Environment.getExternalStorageDirectory();
+                File cachePath = new File(root.getAbsolutePath() + "/DCIM/Camera/image.jpg");
+                try {
+                    cachePath.createNewFile();
+                    FileOutputStream ostream = new FileOutputStream(cachePath);
+                    BitmapDrawable drawable= (BitmapDrawable) img_barcode.getDrawable();
+                    Bitmap bitmap= drawable.getBitmap();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                    ostream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
             }
         });
 
@@ -256,6 +279,8 @@ public class Fragment_Sach extends Fragment {
         });
         return view;
     }
+
+
     private void taomabarcode(String masach){
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -362,6 +387,33 @@ public class Fragment_Sach extends Fragment {
         fragment_hienThi.setArguments(bundle1);
         getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment_hienThi).commit();
     }
+    private void save_barcode(){
+        //to get the image from the ImageView (say iv)
+        BitmapDrawable draw = (BitmapDrawable) img_barcode.getDrawable();
+        Bitmap bitmap = draw.getBitmap();
 
+        FileOutputStream outStream = null;
+        File sdCard = Environment.getExternalStorageDirectory();
+        File dir = new File(sdCard.getAbsolutePath() + "/Barcode");
+        dir.mkdirs();
+        String fileName = String.format("%d.jpg", Masach);
+        File outFile = new File(dir, fileName);
+        try {
+            outStream = new FileOutputStream(outFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        try {
+            outStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            outStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
