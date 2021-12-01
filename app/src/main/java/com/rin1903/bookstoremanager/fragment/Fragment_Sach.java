@@ -17,9 +17,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -149,19 +151,23 @@ public class Fragment_Sach extends Fragment {
         img_barcode_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File root = Environment.getExternalStorageDirectory();
-                File cachePath = new File(root.getAbsolutePath() + "/DCIM/Camera/image.jpg");
-                try {
-                    cachePath.createNewFile();
-                    FileOutputStream ostream = new FileOutputStream(cachePath);
-                    BitmapDrawable drawable= (BitmapDrawable) img_barcode.getDrawable();
-                    Bitmap bitmap= drawable.getBitmap();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
-                    ostream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // Get the image from drawable resource as drawable object
+                Drawable drawable = img_barcode.getDrawable();
 
-                }
+                // Get the bitmap from drawable object
+                Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+
+                File mFile = new File("/barcode/"+String.valueOf(Masach)+".jpg");
+
+                //save image in gallery
+                String savedImageURL = MediaStore.Images.Media.insertImage(
+                        getActivity().getContentResolver(),
+                        bitmap,
+                        "Barcode ",
+                        "Image of Barcode"
+                );
+                Uri savedImageURI = Uri.parse(savedImageURL);
+
             }
         });
 

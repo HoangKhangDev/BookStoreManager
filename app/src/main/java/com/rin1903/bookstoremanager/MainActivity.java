@@ -1,5 +1,6 @@
 package com.rin1903.bookstoremanager;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 import com.rin1903.bookstoremanager.Extension.CaptureAct;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_HOA_DON;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_PHIEU_NHAP;
@@ -30,6 +33,7 @@ import com.rin1903.bookstoremanager.fragment.Fragment_HienThi;
 import com.rin1903.bookstoremanager.fragment.Fragment_Main_Menu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+        requestPermissions();
 
         trang= new ArrayList<>();
 
@@ -129,6 +136,34 @@ public class MainActivity extends AppCompatActivity{
         });
 
     }
+
+
+
+
+
+    private void requestPermissions() {
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "Quyền Truy Cập Thất Bại\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                System.exit(0);
+            }
+
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("Nếu bạn không cung cấp quyền truy cập, bạn sẽ không thể sử dụng dịch vụ của ứng dụng" +
+                        "\n\nVui lòng cho phép quyền truy cập tại [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.INTERNET)
+                .check();
+    }
+
     public static void refesh_chitiethoadon(){
         chi_tiet_hoa_donArrayList = new ArrayList<>();
         Cursor cursor= database.Getdata("select * from CHI_TIET_HOA_DON order by MASACH,MAHOADON asc");
