@@ -20,7 +20,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,9 +45,6 @@ import com.rin1903.bookstoremanager.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
@@ -392,34 +388,6 @@ public class Fragment_Sach extends Fragment {
         bundle1.putString("guidulieu","guidulieu-Sách");
         fragment_hienThi.setArguments(bundle1);
         getFragmentManager().beginTransaction().replace(R.id.fragment_content,fragment_hienThi).commit();
-    }
-    private void save_barcode(){
-        //to get the image from the ImageView (say iv)
-        BitmapDrawable draw = (BitmapDrawable) img_barcode.getDrawable();
-        Bitmap bitmap = draw.getBitmap();
-
-        FileOutputStream outStream = null;
-        File sdCard = Environment.getExternalStorageDirectory();
-        File dir = new File(sdCard.getAbsolutePath() + "/Barcode");
-        dir.mkdirs();
-        String fileName = String.format("%d.jpg", Masach);
-        File outFile = new File(dir, fileName);
-        try {
-            outStream = new FileOutputStream(outFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-        try {
-            outStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            outStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
