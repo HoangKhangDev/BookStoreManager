@@ -20,7 +20,7 @@
             android:orientation="vertical">
             <TextView
                 android:padding="5dp"
-                android:layout_weight="9"
+                android:layout_weight="7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -31,12 +31,25 @@
                 android:gravity="center"
                 android:id="@+id/tv_item_khongcohinh_hienthi"/>
             <TextView
+                android:layout_weight="2"
                 android:layout_marginTop="2dp"
                 android:gravity="right"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="aaaaaaaaa"
                 android:textStyle="italic"
-                android:id="@+id/tv_item_mota_khongcohinh_hienthi"/>
+                android:textColor="#009688"
+                android:id="@+id/tv_item_mota1_khongcohinh_hienthi"/>
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginTop="2dp"
+                android:gravity="right"
+                android:textColor="#00BCD4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="aaaaaaa"
+                android:textStyle="normal"
+                android:id="@+id/tv_item_mota2_khongcohinh_hienthi"/>
         </LinearLayout>
         <ImageView
             android:layout_marginBottom="2dp"

@@ -20,6 +20,12 @@ import java.util.ArrayList;
 public class TacGiaAdapter  extends  RecyclerView.Adapter<TacGiaAdapter.ViewHolder>{
     private ArrayList<TACGIA> tacgiaArrayList;
     private Context context;
+
+    public TacGiaAdapter(ArrayList<TACGIA> tacgiaArrayList, Context context) {
+        this.tacgiaArrayList = tacgiaArrayList;
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
