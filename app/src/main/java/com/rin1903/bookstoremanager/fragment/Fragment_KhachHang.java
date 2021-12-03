@@ -1,14 +1,12 @@
 package com.rin1903.bookstoremanager.fragment;
 
 import static android.app.Activity.RESULT_OK;
-
 import static com.rin1903.bookstoremanager.MainActivity.database;
 import static com.rin1903.bookstoremanager.MainActivity.dulieu;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -136,6 +134,17 @@ public class Fragment_KhachHang extends Fragment {
                     database.INSERT_KHACHHANG(makhachhang,edt_tenkhachhang.getText().toString(),spinner.getSelectedItem().toString(),
                             tv_calendar_khachhang.getText().toString(),edt_sdtkhachhang.getText().toString(),edt_diachi.getText().toString(), hinhanh);
                     Toast.makeText(getActivity(), "Thêm Thành Công", Toast.LENGTH_SHORT).show();
+                    if(getFragmentManager()!=null){
+                        getFragmentManager().popBackStack();
+                    }
+                }
+            }
+        });
+        btn_huy_khachhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getFragmentManager()!=null){
+                    getFragmentManager().popBackStack();
                 }
             }
         });

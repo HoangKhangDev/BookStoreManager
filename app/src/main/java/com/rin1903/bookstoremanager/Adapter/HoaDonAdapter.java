@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.rin1903.bookstoremanager.R;
 import com.rin1903.bookstoremanager.SQLite.HOADON;
 
@@ -18,9 +21,12 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.ViewHolder
     private ArrayList<HOADON> hoadonArrayList;
     private Context context;
 
+    private ViewBinderHelper viewBinderHelper;
+
     public HoaDonAdapter(ArrayList<HOADON> hoadonArrayList, Context context) {
         this.hoadonArrayList = hoadonArrayList;
         this.context = context;
+        viewBinderHelper.setOpenOnlyOne(true);
     }
 
     @NonNull
@@ -36,6 +42,10 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.ViewHolder
         holder.tv_ten.setText(hoadonArrayList.get(position).getMAHOADON());
         holder.tv_mota1.setText(hoadonArrayList.get(position).getTHANHTIEN_CTHD());
         holder.tv_mota2.setText(hoadonArrayList.get(position).getNGAY_HD());
+
+        viewBinderHelper.bind(holder.swipeRevealLayout,hoadonArrayList.get(position).getMAHOADON());
+
+
     }
 
     @Override
@@ -44,12 +54,16 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_ten,tv_mota1,tv_mota2;
+        TextView tv_ten,tv_mota1,tv_mota2;
+        SwipeRevealLayout swipeRevealLayout;
+        LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_ten= itemView.findViewById(R.id.tv_item_khongcohinh_hienthi);
             tv_mota1=itemView.findViewById(R.id.tv_item_mota1_khongcohinh_hienthi);
             tv_mota2=itemView.findViewById(R.id.tv_item_mota2_khongcohinh_hienthi);
+            swipeRevealLayout = itemView.findViewById(R.id.swipelayout_item_khongcohinh);
+            linearLayout = itemView.findViewById(R.id.linearlayout_item_khongcohinh);
         }
     }
 }

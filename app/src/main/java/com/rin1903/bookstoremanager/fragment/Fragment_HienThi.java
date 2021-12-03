@@ -6,8 +6,11 @@ import static com.rin1903.bookstoremanager.MainActivity.dulieu;
 import static com.rin1903.bookstoremanager.MainActivity.hoadonArrayList;
 import static com.rin1903.bookstoremanager.MainActivity.khachhangArrayList;
 import static com.rin1903.bookstoremanager.MainActivity.nhacungcapArrayList;
+import static com.rin1903.bookstoremanager.MainActivity.phieunhapArrayList;
+import static com.rin1903.bookstoremanager.MainActivity.refesh_hoadon;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_khachhang;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_nhacungcap;
+import static com.rin1903.bookstoremanager.MainActivity.refesh_phieunhap;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_sach;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_tacgia;
 import static com.rin1903.bookstoremanager.MainActivity.refesh_theloai;
@@ -23,24 +26,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.rin1903.bookstoremanager.Adapter.Adapte_nhacungcap;
-import com.rin1903.bookstoremanager.Adapter.Adapter_hoadon;
-import com.rin1903.bookstoremanager.Adapter.Adapter_khachhang;
-import com.rin1903.bookstoremanager.Adapter.Adapter_sach;
-import com.rin1903.bookstoremanager.Adapter.Adapter_tacgia;
-import com.rin1903.bookstoremanager.Adapter.Adapter_theloai;
-import com.rin1903.bookstoremanager.MainActivity;
+import com.rin1903.bookstoremanager.Adapter.HoaDonAdapter;
+import com.rin1903.bookstoremanager.Adapter.KhachHangAdapter;
+import com.rin1903.bookstoremanager.Adapter.NhaCungCapAdapter;
+import com.rin1903.bookstoremanager.Adapter.PhieuNhapAdapter;
+import com.rin1903.bookstoremanager.Adapter.SachAdapter;
+import com.rin1903.bookstoremanager.Adapter.TacGiaAdapter;
 import com.rin1903.bookstoremanager.R;
 
 import butterknife.BindView;
@@ -50,7 +52,8 @@ import butterknife.Unbinder;
 public class Fragment_HienThi extends Fragment{
     Unbinder unbinder;
 
-    @BindView(R.id.listview_fragment_hienthi) ListView lv_hienthi;
+    @BindView(R.id.recycleview_fragment_hienthi)
+    RecyclerView recyclerView_hienthi;
     @BindView(R.id.tv_tenhienthi_fragment_hienthi) TextView tv_tenhienthi;
     @BindView(R.id.button_float_add_fragment_hienthi) FloatingActionButton btn_add;
     @BindView(R.id.back_fragment_hienthi) ImageView img_back;
@@ -75,6 +78,9 @@ public class Fragment_HienThi extends Fragment{
 
 
 
+        recyclerView_hienthi.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        recyclerView_hienthi.setLayoutManager(linearLayoutManager);
 
 
         Bundle bundle= getArguments();
@@ -333,54 +339,50 @@ public class Fragment_HienThi extends Fragment{
         });
 
 
-        lv_hienthi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
+
 
         return view;
     }
     public void refesh_lv_theloai(){
-        refesh_theloai();
-        Adapter_theloai adapter_theloai;
-        adapter_theloai= new Adapter_theloai((MainActivity) getActivity(),R.layout.item_hienthi_khongcohinh,theloaiArrayList);
-        lv_hienthi.setAdapter(adapter_theloai);
-        adapter_theloai.notifyDataSetChanged();
+        refesh_phieunhap();
+        PhieuNhapAdapter adapter;
+        adapter= new PhieuNhapAdapter(phieunhapArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
     public void refesh_lv_khachhang(){
         refesh_khachhang();
-        Adapter_khachhang adapter_khachhang;
-        adapter_khachhang= new Adapter_khachhang((MainActivity) getActivity(),R.layout.item_list_hienthi_cohinh,khachhangArrayList);
-        lv_hienthi.setAdapter(adapter_khachhang);
+        KhachHangAdapter adapter_khachhang;
+        adapter_khachhang= new KhachHangAdapter(khachhangArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter_khachhang);
         adapter_khachhang.notifyDataSetChanged();
     }
     public void refesh_lv_tacgia(){
         refesh_tacgia();
-        Adapter_tacgia adapter;
-        adapter= new Adapter_tacgia((MainActivity) getActivity(),R.layout.item_list_hienthi_cohinh,tacgiaArrayList);
-        lv_hienthi.setAdapter(adapter);
+        TacGiaAdapter adapter;
+        adapter= new TacGiaAdapter(tacgiaArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
     public void refesh_lv_sach(){
         refesh_sach();
-        Adapter_sach adapter;
-        adapter= new Adapter_sach((MainActivity) getActivity(),R.layout.item_list_hienthi_cohinh,sachArrayList);
-        lv_hienthi.setAdapter(adapter);
+        SachAdapter adapter;
+        adapter= new SachAdapter(sachArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
     public void refesh_lv_nhacungcap(){
         refesh_nhacungcap();
-        Adapte_nhacungcap adapter;
-        adapter= new Adapte_nhacungcap((MainActivity) getActivity(),R.layout.item_list_hienthi_cohinh,nhacungcapArrayList);
-        lv_hienthi.setAdapter(adapter);
+        NhaCungCapAdapter adapter;
+        adapter= new NhaCungCapAdapter(nhacungcapArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
     public void refesh_lv_hoadon(){
-        refesh_lv_hoadon();
-        Adapter_hoadon adapter;
-        adapter= new Adapter_hoadon((MainActivity) getActivity(),R.layout.item_hienthi_khongcohinh,hoadonArrayList);
-        lv_hienthi.setAdapter(adapter);
+        refesh_hoadon();
+        HoaDonAdapter adapter;
+        adapter= new HoaDonAdapter(hoadonArrayList,getActivity());
+        recyclerView_hienthi.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 

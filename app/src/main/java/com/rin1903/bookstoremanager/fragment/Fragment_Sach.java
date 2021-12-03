@@ -380,8 +380,11 @@ public class Fragment_Sach extends Fragment {
         {
             maloai=cursor_theloai.getString(0);
         }
-        database.INSERT_SACH(Masach,maloai,matacgia,edt_tensach.getText().toString(),Integer.parseInt(edt_soquyen.getText().toString())
-                ,spinner_trangthai.getSelectedItem().toString(),Integer.parseInt(edt_giaban.getText().toString()),hinhanh);
+        database.INSERT_SACH(Masach,maloai,matacgia
+                ,edt_tensach.getText().toString()
+                ,Integer.parseInt(edt_soquyen.getText().toString())
+                ,spinner_trangthai.getSelectedItem().toString()
+                ,Integer.parseInt(edt_giaban.getText().toString()),hinhanh);
         Toast.makeText(getActivity(), "Thêm Sách Thành Công", Toast.LENGTH_SHORT).show();
         Fragment_HienThi fragment_hienThi= new Fragment_HienThi();
         Bundle bundle1= new Bundle();
