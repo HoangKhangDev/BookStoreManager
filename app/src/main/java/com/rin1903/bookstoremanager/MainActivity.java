@@ -3,22 +3,17 @@ package com.rin1903.bookstoremanager;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
-import com.rin1903.bookstoremanager.Extension.CaptureAct;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_HOA_DON;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_PHIEU_NHAP;
 import com.rin1903.bookstoremanager.SQLite.Database;
@@ -126,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
                    }
                    case R.id.taohoadon:
                    {
-                       scancode();
+
                        break;
                    }
                    case R.id.report:
@@ -295,23 +290,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    public void scancode(){
-        IntentIntegrator integrator= new IntentIntegrator(this);
-        integrator.setCaptureActivity(CaptureAct.class);
-        integrator.setOrientationLocked(false);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Scanning ...");
-        integrator.initiateScan();
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        IntentResult result= IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-        if(result.getContents()!=null) {
-            Toast.makeText(getApplication(), ""+result.getContents(), Toast.LENGTH_SHORT).show();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     public void onBackPressed() {
