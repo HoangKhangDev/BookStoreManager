@@ -21,12 +21,13 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.ViewHolder
     private ArrayList<HOADON> hoadonArrayList;
     private Context context;
 
-    private ViewBinderHelper viewBinderHelper;
+    private ViewBinderHelper viewBinderHelper= new ViewBinderHelper();
 
     public HoaDonAdapter(ArrayList<HOADON> hoadonArrayList, Context context) {
         this.hoadonArrayList = hoadonArrayList;
         this.context = context;
         viewBinderHelper.setOpenOnlyOne(true);
+
     }
 
     @NonNull
@@ -43,7 +44,9 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.ViewHolder
         holder.tv_mota1.setText(hoadonArrayList.get(position).getTHANHTIEN_CTHD());
         holder.tv_mota2.setText(hoadonArrayList.get(position).getNGAY_HD());
 
-        viewBinderHelper.bind(holder.swipeRevealLayout,hoadonArrayList.get(position).getMAHOADON());
+        if(hoadonArrayList!=null){
+            viewBinderHelper.bind(holder.swipeRevealLayout,hoadonArrayList.get(position).getMAHOADON());
+        }
 
 
     }

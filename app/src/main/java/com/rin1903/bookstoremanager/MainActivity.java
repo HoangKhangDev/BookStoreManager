@@ -1,19 +1,25 @@
 package com.rin1903.bookstoremanager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
+import com.rin1903.bookstoremanager.Extension.CaptureAct;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_HOA_DON;
 import com.rin1903.bookstoremanager.SQLite.CHI_TIET_PHIEU_NHAP;
 import com.rin1903.bookstoremanager.SQLite.Database;
@@ -34,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends Activity {
 
     @BindView(R.id.navbar_bottom)  BottomNavigationView navigation;
     public static String Tag= "fragment";
@@ -66,7 +72,6 @@ public class MainActivity extends AppCompatActivity{
         trang= new ArrayList<>();
 
         database = new Database(this,"quanlycuahangsach.sqlite",null,1);
-        database.QueryData("drop table sach");
 
         CHI_TIET_HOA_DON chi_tiet_hoa_don= new CHI_TIET_HOA_DON();
         CHI_TIET_PHIEU_NHAP chi_tiet_phieu_nhap= new CHI_TIET_PHIEU_NHAP();
@@ -290,7 +295,23 @@ public class MainActivity extends AppCompatActivity{
 
 
 
+    public void scancode(){
+        IntentIntegrator integrator= new IntentIntegrator(MainActivity.this);
+        integrator.setCaptureActivity(CaptureAct.class);
+        integrator.setOrientationLocked(false);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("Scanning ...");
+        integrator.initiateScan();
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result= IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+        if(result.getContents()!=null) {
+            Toast.makeText(this, ""+result.getContents(), Toast.LENGTH_SHORT).show();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onBackPressed() {
